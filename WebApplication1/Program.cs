@@ -1,3 +1,5 @@
+using WebApplication1.Controllers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,5 +21,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+
+IdentityController.StartThread();
 
 app.Run();
