@@ -13,7 +13,7 @@ namespace WebApplication1.Controllers
         [Route("Index")]
         public IActionResult Index()
         {
-            return Ok(new { Id, Stopped, Count = threads.Where(x => x.ThreadState != ThreadState.Running).Count() });
+            return Ok(new { Id, Stopped, Count = threads.Where(x => x.ThreadState == ThreadState.Running).Count() });
         }
         [HttpGet]
         [Route("StopThred")]
