@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace WebApplication1.Controllers
 {
@@ -6,14 +7,17 @@ namespace WebApplication1.Controllers
     [Route("[controller]")]
     public class IdentityController : Controller
     {
-        private static string Id = Guid.NewGuid().ToString();
+        internal static string Id { get; } = Guid.NewGuid().ToString();
         internal static List<Thread> threads = new List<Thread>();
-        internal static bool Stopped = false;
+        internal static bool Stopped = false;      
+        
         [HttpGet]
         [Route("Index")]
         public IActionResult Index()
         {
-            return Ok(new { Id, Stopped, Count = threads.Where(x => x.ThreadState == ThreadState.Running).Count() });
+            Process proc = Process.GetCurrentProcess();
+            return Ok(new { Id, Stopped, Count = threads.Where(x => x.ThreadState == System.Threading.ThreadState.Running).Count() , Memory = proc.PrivateMemorySize64
+        });
         }
         [HttpGet]
         [Route("StopThred")]
@@ -44,8 +48,11 @@ namespace WebApplication1.Controllers
                     while (!Stopped)
                     {
                         result += Math.Sqrt(i);
-
                         i++;
+                    }
+                    if (Stopped)
+                    {
+                        buffer = null;
                     }
                 }
                 catch (Exception ex)

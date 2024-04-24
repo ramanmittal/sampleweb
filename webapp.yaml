@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp1deployment
+  labels:
+    app: webapp1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp1
+  template:
+    metadata:
+      labels:
+        app: webapp1
+    spec:
+      containers:
+      - name: webapp1
+        image: ramanmittaldnata/webapplication1:v3.4
+        ports:
+        - containerPort: 80
+        resources:
+         requests:
+          cpu: 500m    
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1deployment-service
+spec:
+  selector:
+    app: webapp1
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8110
+      targetPort: 80
+      nodePort: 30001
+      
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: webapp1hpa # Replace with your application name-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: webapp1deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        # Scale down if memory usage < 33% (100 MB / 300 MB)
+        averageUtilization: 40
+         # cpuUtilization: 30
+        # # Scale up if memory usage > 100%
+        # scaling:
+         # cpuUtilization: 50

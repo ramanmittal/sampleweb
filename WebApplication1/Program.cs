@@ -1,4 +1,8 @@
+using StackExchange.Redis;
 using WebApplication1.Controllers;
+using WebApplication1.Hubs;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +12,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR(options =>
+{
+    options.MaximumReceiveMessageSize = long.MaxValue;
+}).AddStackExchangeRedis(options =>
+{
+    var configuration = builder.Configuration;
+    var redisHost = configuration["RedisHost"];
+    options.Configuration = ConfigurationOptions.Parse(redisHost);
+    options.Configuration.ChannelPrefix = configuration["RedisChannel"];
+});
 
 var app = builder.Build();
 
@@ -19,9 +33,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-
+app.MapHub<InternalServerCommunicationHub>("/internalServerCommunicationHub");
 app.MapControllers();
-
-IdentityController.StartThread();
 
 app.Run();
