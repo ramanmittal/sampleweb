@@ -5,7 +5,7 @@ metadata:
   labels:
     app: webapp1
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: webapp1
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: webapp1
-        image: ramanmittaldnata/webapplication1:v3.4
+        image: ramanmittaldnata/webapplication1:v3.5.1
         ports:
         - containerPort: 80
         resources:
@@ -28,38 +28,41 @@ apiVersion: v1
 kind: Service
 metadata:
   name: webapp1deployment-service
+  labels:
+    app: example-app
 spec:
   selector:
     app: webapp1
   type: LoadBalancer
   ports:
     - protocol: TCP
+      name: web
       port: 8110
       targetPort: 80
       nodePort: 30001
       
----
+# ---
 
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: webapp1hpa # Replace with your application name-hpa
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: webapp1deployment
-  minReplicas: 1
-  maxReplicas: 5
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        # Scale down if memory usage < 33% (100 MB / 300 MB)
-        averageUtilization: 40
-         # cpuUtilization: 30
-        # # Scale up if memory usage > 100%
-        # scaling:
-         # cpuUtilization: 50
+# apiVersion: autoscaling/v2
+# kind: HorizontalPodAutoscaler
+# metadata:
+  # name: webapp1hpa # Replace with your application name-hpa
+# spec:
+  # scaleTargetRef:
+    # apiVersion: apps/v1
+    # kind: Deployment
+    # name: webapp1deployment
+  # minReplicas: 1
+  # maxReplicas: 5
+  # metrics:
+  # - type: Resource
+    # resource:
+      # name: cpu
+      # target:
+        # type: Utilization
+        # # Scale down if memory usage < 33% (100 MB / 300 MB)
+        # averageUtilization: 40
+         # # cpuUtilization: 30
+        # # # Scale up if memory usage > 100%
+        # # scaling:
+         # # cpuUtilization: 50

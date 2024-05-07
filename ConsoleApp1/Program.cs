@@ -5,7 +5,8 @@ using System.Collections.Concurrent;
 var tasks = new List<Task>();
 var set = new ConcurrentDictionary<string, List<HubConnection>>();
 HubConnection asServerHubConnection = new HubConnectionBuilder()
-                    .WithUrl("https://localhost:7160/internalServerCommunicationHub")
+                    .WithUrl("http://127.0.0.1:21903/internalServerCommunicationHub")
+                    //.WithUrl("http://localhost:5160/internalServerCommunicationHub")
                     .WithAutomaticReconnect()
                     .Build();
 asServerHubConnection.StartAsync().Wait();
