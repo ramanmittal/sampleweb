@@ -43,26 +43,21 @@ spec:
       
 # ---
 
-# apiVersion: autoscaling/v2
-# kind: HorizontalPodAutoscaler
-# metadata:
-  # name: webapp1hpa # Replace with your application name-hpa
-# spec:
-  # scaleTargetRef:
-    # apiVersion: apps/v1
-    # kind: Deployment
-    # name: webapp1deployment
-  # minReplicas: 1
-  # maxReplicas: 5
-  # metrics:
-  # - type: Resource
-    # resource:
-      # name: cpu
-      # target:
-        # type: Utilization
-        # # Scale down if memory usage < 33% (100 MB / 300 MB)
-        # averageUtilization: 40
-         # # cpuUtilization: 30
-        # # # Scale up if memory usage > 100%
-        # # scaling:
-         # # cpuUtilization: 50
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: webapp1hpa # Replace with your application name-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: webapp1deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization        
+        averageUtilization: 40
