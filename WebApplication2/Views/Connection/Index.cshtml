@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.SignalR.Client
+@model List<HubConnectionState>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <p>ConnectionId</p>
+            </th>
+            <td>Index</td>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (var i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <td>
+                    <span>@(Model[i].ToString())</span>
+                </td>
+                <td>
+                    <span>@(i)</span>
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new {  id= i })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
